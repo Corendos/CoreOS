@@ -11,7 +11,7 @@ enum{	GPIO_BASE = 0x20200000,
 		GPSET0 = GPIO_BASE + 0x1C,
 		GPSET1 = GPIO_BASE + 0x20,
 		GPCLR0 = GPIO_BASE + 0x28,
-		GPCLR0 = GPIO_BASE + 0x2C;
+		GPCLR1 = GPIO_BASE + 0x2C,
 		GPPUD = GPIO_BASE + 0x94,
 		GPPUDCLK0 = GPIO_BASE + 0x98,
 		GPPUDCLK1 = GPIO_BASE + 0x9C,
@@ -36,7 +36,7 @@ enum{	GPIO_BASE = 0x20200000,
 		UART0_ITOP = UART0_BASE + 0x88,
 		UART0_TDR = UART0_BASE + 0x8C
 
-}
+};
 
 
 static inline void mmio_write(uint32_t reg, uint32_t data)
@@ -52,6 +52,41 @@ static inline uint32_t mmio_read(uint32_t reg)
 static inline void delay(uint32_t count)
 {
 	asm volatile("__delay__%=: subs %[count], %[count], #1; bne __delay__%=\n" : "=r"(count) : [count]"0"(count) : "cc");
+}
+
+size_t strlen(const char* str)
+{
+	uint32_t count = 0;
+	while(*(str + count) != 0)
+	{
+		count++;
+	}
+	return count;
+}
+
+unsigned char uart_getc()
+{
+	while(mmio_read(UART0_FR) & (1 << 4));
+	return mmio_read(UART0_DR);
+}
+
+void uart_putc(unsigned char c)
+{
+	while(mmio_read(UART0_FR) & (1 << 5));
+	mmio_write(UART0_DR, (uint32_t)c);
+}
+
+void uart_write(const unsigned char* buffer, size_t size)
+{
+	for(size_t i = 0;i < size;++i)
+	{
+		uart_putc(*(buffer + i));
+	}
+}
+
+void uart_puts(const char* str)
+{
+	uart_write((const unsigned char*)str, strlen(str));
 }
 
 void uart_init()
@@ -80,7 +115,12 @@ void uart_init()
 
 void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 {
+	(void) r0;
+	(void) r1;
+	(void) atags;
+
 	uart_init();
+	uart_puts("Hello, world !\r\n");
 	
 	while(1);
 }
