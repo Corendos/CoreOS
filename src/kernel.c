@@ -1,6 +1,8 @@
 #include "stddef.h"
 #include "stdint.h"
 
+void activate(uint32_t* stack);
+
 enum{	GPIO_BASE = 0x20200000,
 		GPFSEL0 = GPIO_BASE + 0x00,
 		GPFSEL1 = GPIO_BASE + 0x04,
@@ -113,11 +115,21 @@ void uart_init()
 	mmio_write(UART0_CR, (1 << 0)|(1 << 8)|(1 << 9));
 }
 
+void user_task(void)
+{
+	uart_puts("Task 1\r\n");
+}
+
 void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 {
 	(void) r0;
 	(void) r1;
 	(void) atags;
+
+	uint32_t user_stack[256];
+	user_stack[0] = (uint32_t)&user_task;
+
+	activate(user_stack);
 
 	uart_init();
 	uart_puts("Hello, world !\r\n");

@@ -6,3 +6,70 @@ to physical adress.
 0x7Ennnnnn -> 0x20nnnnnn
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
+
+
+Procedure to activate a process:
+	- Store the stack pointer in r0
+		call activate(stack_pointer)
+	- Save kernel space -> push
+	- Change the stack pointer value
+	- Load user state -> pop
+	- Jump to the task
+
+	The register r4 - r12, r14, r15 are saved.
+	We must put the adress of the start code in r15 because we branch to this adress
+
+
+	The stack grows downward
+	Example:
+		push {r4 - r12}
+
+		+--------+
+		|   r4   |
+		+--------+
+		|   r5   |
+		+--------+
+		|   r6   |
+		+--------+
+		|   r7   |
+		+--------+
+		|   r8   |
+		+--------+
+		|   r9   |
+		+--------+
+		|  r10   |
+		+--------+
+		|  r11   |
+		+--------+
+		|  r12   |
+		+--------+
+
+	When creating a stack, we now that the user stack looks like this:
+
+		+-----+--------+
+		|  9  |   r4   |
+		+-----+--------+
+		|  8  |   r5   |
+		+-----+--------+
+		|  7  |   r6   |
+		+-----+--------+
+		|  6  |   r7   |
+		+-----+--------+
+		|  5  |   r8   |
+		+-----+--------+
+		|  4  |   r9   |
+		+-----+--------+
+		|  3  |  r10   |
+		+-----+--------+
+		|  2  |  r11   |
+		+-----+--------+
+		|  1  |  r12   |
+		+-----+--------+
+		|  0  |  r15   |
+		+-----+--------+
+
+
+
+Stack Pointer: r13
+Link register: r14
+Program Counter: r15
