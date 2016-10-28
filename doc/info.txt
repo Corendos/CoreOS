@@ -1,3 +1,5 @@
+-------- I. General knowledge --------
+
 When booting, the GPU loads the kernel.
 
 
@@ -6,6 +8,8 @@ to physical adress.
 0x7Ennnnnn -> 0x20nnnnnn
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
+
+The BCM2837 is the same as the BCM2836 except that the processor is a Cortex-A53 instead of the Cortex-A7
 
 
 Procedure to activate a process:
