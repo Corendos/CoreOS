@@ -1,3 +1,5 @@
++------------ I. General Knowledge ------------+
+
 When booting, the GPU loads the kernel.
 
 
@@ -7,6 +9,9 @@ to physical adress.
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
 
++------------ II. Theory ------------+
+
++------------ 1. About Process Switching ------------+
 
 Procedure to activate a process:
 	- Store the stack pointer in r0
@@ -19,6 +24,7 @@ Procedure to activate a process:
 	The register r4 - r12, r14, r15 are saved.
 	We must put the adress of the start code in r15 because we branch to this adress
 
++------------ 2. The Stack ------------+
 
 	The stack grows downward
 	Example:
@@ -68,7 +74,7 @@ Procedure to activate a process:
 		|  0  |  r15   |
 		+-----+--------+
 
-
++------------ 3. Register Other Names ------------+
 
 Stack Pointer: r13
 Link register: r14
