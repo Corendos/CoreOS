@@ -5,9 +5,11 @@ When booting, the GPU loads the kernel.
 
 In the documentation, the peripherals adresses are given at bus adress and must be translated
 to physical adress.
-0x7Ennnnnn -> 0x20nnnnnn
+0x7Ennnnnn -> 0x3Fnnnnnn
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
+
+BL instruction set the return adress in LR.
 
 +------------ II. Theory ------------+
 
@@ -53,29 +55,29 @@ Procedure to activate a process:
 	When creating a stack, we now that the user stack looks like this:
 
 		+-----+--------+
-		|  9  |   r4   |
+		| 255 |  r14   |
 		+-----+--------+
-		|  8  |   r5   |
+		| 254 |  r11   |
 		+-----+--------+
-		|  7  |   r6   |
+		| 253 |  r10   |
 		+-----+--------+
-		|  6  |   r7   |
+		| 252 |   r9   |
 		+-----+--------+
-		|  5  |   r8   |
+		| 251 |   r8   |
 		+-----+--------+
-		|  4  |   r9   |
+		| 250 |   r7   |
 		+-----+--------+
-		|  3  |  r10   |
+		| 249 |   r6   |
 		+-----+--------+
-		|  2  |  r11   |
+		| 248 |   r5   |
 		+-----+--------+
-		|  1  |  r12   |
+		| 247 |   r4   |
 		+-----+--------+
-		|  0  |  r15   |
-		+-----+--------+
+		| ... |   ..   |
 
 +------------ 3. Register Other Names ------------+
 
-Stack Pointer: r13
-Link register: r14
-Program Counter: r15
+Stack Pointer: r13 					-> Hold the stack pointer
+Link register: r14 					-> Hold the caller's return address
+Program Counter: r15				-> Hold the program counter
+Current Program Status Register 	-> Hold the current status

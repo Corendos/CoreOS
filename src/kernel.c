@@ -3,7 +3,8 @@
 
 void activate(uint32_t* stack);
 
-enum{	GPIO_BASE = 0x3F200000,
+enum{	
+		GPIO_BASE = 0x3F200000,
 		GPFSEL0 = GPIO_BASE + 0x00,
 		GPFSEL1 = GPIO_BASE + 0x04,
 		GPFSEL2 = GPIO_BASE + 0x08,
@@ -37,7 +38,6 @@ enum{	GPIO_BASE = 0x3F200000,
 		UART0_ITIP = UART0_BASE + 0x84,
 		UART0_ITOP = UART0_BASE + 0x88,
 		UART0_TDR = UART0_BASE + 0x8C
-
 };
 
 
@@ -120,6 +120,17 @@ void user_task(void)
 	uart_puts("Task 1\r\n");
 }
 
+void setup_task_stack(uint32_t *stack_start, uint32_t stack_size, uint32_t task_adress)
+{
+	uint32_t* stack_current = stack_start + stack_size * sizeof(uint32_t) - 9 * sizeof(uint32_t);
+
+	for(int i = 0;i < 8;++i)
+	{
+		stack_current[i] = 0;
+	}
+	stack_current[8] = (uint32_t)task_adress;
+}
+
 void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 {
 	(void) r0;
@@ -127,7 +138,7 @@ void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
 	(void) atags;
 
 	uint32_t user_stack[256];
-	user_stack[0] = (uint32_t)&user_task;
+	setup_task_stack(user_stack, 256, (uint32_t)user_task);
 
 	activate(user_stack);
 
