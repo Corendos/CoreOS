@@ -3,13 +3,13 @@
 When booting, the GPU loads the kernel.
 
 
-In the documentation, the peripherals adresses are given at bus adress and must be translated
-to physical adress.
+In the documentation, the peripherals addresses are given at bus address and must be translated
+to physical address.
 0x7Ennnnnn -> 0x3Fnnnnnn
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
 
-BL instruction set the return adress in LR.
+BL instruction set the return address in LR.
 
 +------------ II. Theory ------------+
 
@@ -24,7 +24,7 @@ Procedure to activate a process:
 	- Jump to the task
 
 	The register r4 - r12, r14, r15 are saved.
-	We must put the adress of the start code in r15 because we branch to this adress
+	We must put the address of the start code in r15 because we branch to this address
 
 +------------ 2. The Stack ------------+
 
@@ -81,3 +81,29 @@ Stack Pointer: r13 					-> Hold the stack pointer
 Link register: r14 					-> Hold the caller's return address
 Program Counter: r15				-> Hold the program counter
 Current Program Status Register 	-> Hold the current status
+
++------------ 4. Interrupt Vector ------------+
+0x00000000		->	reset vector
+0x00000004		->	undefined instruction vector
+0x00000008		->	service call vector
+0x0000000C		->	prefetch abort vector
+0x00000010		->	data abort vector
+0x00000014		->	unused
+0x00000018		->	interrupt vector
+0x0000001C		->	fast interrupt vector
+
+
+
++------------ III. Compilation ------------+
+
++------------ 1. C file ------------+
+
+	We need to use: arm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -O2 -Wall -Wextra -c $file -o $file_base_name.o
+
++------------ 2. ASM file ------------+
+
+	We need to use: arm-none-eabi-gcc -mcpu=arm1176jzf-s -fpic -ffreestanding -Wall -Wextra -c $file_name -o $file_base_name.o
+
++------------ 3. Linking step ------------+
+	
+	We need to use: arm-none-eabi-gcc -T linker.ld -o name.elf -ffreestanding -O2 -nostdlib ".o files"

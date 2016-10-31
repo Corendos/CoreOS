@@ -1,7 +1,37 @@
-#include "stddef.h"
-#include "stdint.h"
+#include <stddef.h>
+#include <stdint.h>
 
 void activate(uint32_t* stack);
+
+void undefined_instruction_handler(void)
+{
+	while(1);
+}
+
+void svc_handler(void)
+{
+	while(1);
+}
+
+void prefetch_abort_handler(void)
+{
+	while(1);
+}
+
+void data_abort_handler(void)
+{
+	while(1);
+}
+
+void irq_handler(void)
+{
+	while(1);
+}
+
+void fiq_handler(void)
+{
+	while(1);
+}
 
 enum{	
 		GPIO_BASE = 0x3F200000,
@@ -39,6 +69,8 @@ enum{
 		UART0_ITOP = UART0_BASE + 0x88,
 		UART0_TDR = UART0_BASE + 0x8C
 };
+
+
 
 
 static inline void mmio_write(uint32_t reg, uint32_t data)

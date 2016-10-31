@@ -11,4 +11,4 @@ activate:
 	pop {r4 - r11, r14}
 
 	/* jump to the function*/
-	b r14
+	bx lr
