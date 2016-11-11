@@ -1,3 +1,7 @@
+.section .data
+kernel_stack_pointer: .word 1
+.global kernel_stack_pointer
+
 .section .text.boot /* Give a name to this section*/
 .globl _start
 
@@ -5,26 +9,20 @@
 
 _start:
 	mov sp, #0x8000 /* We set the SP to 0x8000 */
+	bl kernel_main
 
-	ldr r4, =__bss_start	// Setting bss_start
-	ldr r9, =__bss_end		// Setting bss_end
-	mov r5, #0
-	mov r6, #0
-	mov r7, #0
-	mov r8, #0
-	b 		2f
+.globl GET32
 
-1:
-	stmia r4!, {r5 - r8}
+GET32:
+	ldr r0, [r0]
+	bx lr
 
-2:
-	cmp r4, r9
-	blo		1b				// Zeroing this segment
+.globl PUT32
 
-	ldr r3, =kernel_main	// Load the kernel main
-	blx r3					// Jump to it
+PUT32:
+	str r1, [r0]
+	bx lr
 
 halt:
-	wfe
 	b halt
 	

@@ -5,7 +5,7 @@ When booting, the GPU loads the kernel.
 
 In the documentation, the peripherals addresses are given at bus address and must be translated
 to physical address.
-0x7Ennnnnn -> 0x3Fnnnnnn
+0x7Ennnnnn -> 0x20nnnnnn
 
 By default the GPU has 64Mb of memory and the remaining part is given to the CPU.
 
