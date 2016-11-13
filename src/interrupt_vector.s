@@ -7,7 +7,7 @@
 .extern svc_handler
 .extern prefetch_abort_handler
 .extern data_abort_handler
-.extern irq_handler
+.extern asm_irq_handler
 .extern fiq_handler
 
 isr_vector:

@@ -8,7 +8,7 @@ ASMFLAGS=-mcpu=arm1176jzf-s -fpic -ffreestanding -Wall -Wextra
 
 LDFLAGS=-T linker.ld -ffreestanding -O2 -nostdlib
 
-EXEC=clean list binary
+EXEC=clean list binary download
 
 SRCC=$(wildcard *.c)
 OBJC=$(SRCC:.c=.o)
@@ -29,6 +29,11 @@ asm: $(ASMOUT)
 
 binary: compile
 	$(OBJCOPY) ../build/$(OSNAME).elf -O binary ../build/$(OSNAME).img
+
+download: binary
+	sudo mount /dev/mmcblk0p1 /media/corendos/boot/
+	sudo cp ../build/$(OSNAME).img /media/corendos/boot/
+	sudo umount /dev/mmcblk0p1
 
 list: compile
 	$(OBJDUMP) -D ../build/$(OSNAME).elf > ../build/$(OSNAME).list
