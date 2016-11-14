@@ -20,4 +20,21 @@ extern uint32_t GET32(uint32_t addr);
 extern void dump_register_asm();
 extern void svc_return();
 
+extern uint32_t*  r0_reg;
+extern uint32_t*  r1_reg;
+extern uint32_t*  r2_reg;
+extern uint32_t*  r3_reg;
+extern uint32_t*  r4_reg;
+extern uint32_t*  r5_reg;
+extern uint32_t*  r6_reg;
+extern uint32_t*  r7_reg;
+extern uint32_t*  r8_reg;
+extern uint32_t*  r9_reg;
+extern uint32_t*  r10_reg;
+extern uint32_t*  r11_reg;
+extern uint32_t*  r12_reg;
+extern uint32_t*  r13_reg;
+extern uint32_t*  r14_reg;
+extern uint32_t*  r15_reg;
+extern uint32_t*  cpsr_reg;
 #endif

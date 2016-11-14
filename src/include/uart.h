@@ -13,6 +13,7 @@ uint32_t uart_available();
 void uart_putc(unsigned char c);
 void uart_write_buffer(const unsigned char* buffer, size_t size);
 void uart_write(const uint32_t value, uint32_t mode);
+void uart_write_nl(const uint32_t value, uint32_t mode);
 void uart_puts(const char* str);
 void uart_init();
 void _uart_write_hex(const uint32_t data);

@@ -25,6 +25,12 @@ void uart_write_buffer(const unsigned char* buffer, size_t size)
 	}
 }
 
+void uart_write_nl(const uint32_t value, uint32_t mode)
+{
+	uart_write(value, mode);
+	uart_newline();
+}
+
 void uart_write(const uint32_t value, uint32_t mode)
 {
 	if(mode == Hex)
@@ -170,4 +176,38 @@ void dump_register()
 {
 	uart_puts("Etat des registres:\r\n");
 	dump_register_asm();
+	uart_puts("Register r0: ");
+	uart_write_nl(*r0_reg, Hex);
+	uart_puts("Register r1: ");
+	uart_write_nl(*r1_reg, Hex);
+	uart_puts("Register r2: ");
+	uart_write_nl(*r2_reg, Hex);
+	uart_puts("Register r3: ");
+	uart_write_nl(*r3_reg, Hex);
+	uart_puts("Register r4: ");
+	uart_write_nl(*r4_reg, Hex);
+	uart_puts("Register r5: ");
+	uart_write_nl(*r5_reg, Hex);
+	uart_puts("Register r6: ");
+	uart_write_nl(*r6_reg, Hex);
+	uart_puts("Register r7: ");
+	uart_write_nl(*r7_reg, Hex);
+	uart_puts("Register r8: ");
+	uart_write_nl(*r8_reg, Hex);
+	uart_puts("Register r9: ");
+	uart_write_nl(*r9_reg, Hex);
+	uart_puts("Register r10: ");
+	uart_write_nl(*r10_reg, Hex);
+	uart_puts("Register r11: ");
+	uart_write_nl(*r11_reg, Hex);
+	uart_puts("Register r12: ");
+	uart_write_nl(*r12_reg, Hex);
+	uart_puts("Register r13: ");
+	uart_write_nl(*r13_reg, Hex);
+	uart_puts("Register r14: ");
+	uart_write_nl(*r14_reg, Hex);
+	uart_puts("Register r15: ");
+	uart_write_nl(*r15_reg, Hex);
+	uart_puts("Register CPSR: ");
+	uart_write_nl(*cpsr_reg, Bin);
 }

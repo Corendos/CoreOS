@@ -11,14 +11,19 @@ LDFLAGS=-T linker.ld -ffreestanding -O2 -nostdlib
 EXEC=clean list binary download
 
 SRCC=$(wildcard *.c)
-OBJC=$(SRCC:.c=.o)
+OBJC=$(patsubst %.c, obj/%.o,$(SRCC))
 
 SRCASM=$(wildcard *.s)
-OBJASM=$(SRCASM:.s=.o)
+OBJASM=$(patsubst %.s, obj/%.o,$(SRCASM))
+
+OBJDIR=obj
 
 ASMOUT=$(SRCC:.c=.s)
 
 OSNAME=kernel
+
+print:
+	echo $(OBJC)
 
 all: $(EXEC)
 
@@ -41,11 +46,11 @@ list: compile
 %.s: %.c
 	$(CC) $(CFLAGS02) -S -o asm/$@ -c $^
 
-%.o: %.c
-	$(CC) $(CFLAGS02) -o $@ -c $^
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS02) -c -o $@ $<
 
-%.o: %.s
-	$(CC) $(ASMFLAGS) -o $@ -c $^
+$(OBJDIR)/%.o: %.s
+	$(CC) $(ASMFLAGS) -c -o $@ $<
 
 clean:
 	rm -rf *.o
