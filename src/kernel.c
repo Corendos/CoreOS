@@ -1,25 +1,22 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "include/register.h"
-#include "include/define.h"
-#include "include/uart.h"
-#include "include/util.h"
-#include "include/exception_handler.h"
-#include "include/svc.h"
+#include "register.h"
+#include "uart.h"
+#include "util.h"
+#include "exception_handler.h"
+#include "irq_util.h"
+#include "dispatch.h"
 
-void activate(uint32_t* stack);
 
-void kernel_main(uint32_t r0, uint32_t r1, uint32_t atags)
+void kernel_main(void)
 {
-	(void)r0;
-	(void)r1;
-	(void)atags;
-
 	uart_init();
-	uart_puts("Test a 115000 bauds - 2\r\n");
-	//print_memory(0x7000, 0x400);
-	dump_register();
+	uart_puts_nl("======== Raspberry Pi Zero - CoreOS ========");
+	uart_puts_nl("Enabling Timer 1");
+	
+	init_irq();
+
 
 	while(1)
 	{

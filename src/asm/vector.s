@@ -2,7 +2,7 @@
 .section .text.isr
 
 
-.extern reset_handler
+.extern reset
 .extern undefined_instruction_handler
 .extern svc_handler
 .extern prefetch_abort_handler
@@ -11,11 +11,11 @@
 .extern fiq_handler
 
 isr_vector:
-	b _start
+	b reset
 	b undefined_instruction_handler
 	b svc_handler
 	b prefetch_abort_handler
 	b data_abort_handler
-	nop
+	.word 0
 	b irq_handler
 	b fiq_handler

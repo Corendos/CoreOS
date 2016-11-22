@@ -1,22 +1,44 @@
 .globl dump_register_asm
-.extern r0_reg
-.extern r1_reg
-.extern r2_reg
-.extern r3_reg
-.extern r4_reg
-.extern r5_reg
-.extern r6_reg
-.extern r7_reg
-.extern r8_reg
-.extern r9_reg
-.extern r10_reg
-.extern r11_reg
-.extern r12_reg
-.extern r13_reg
-.extern r14_reg
-.extern r15_reg
-.extern cpsr_reg
 
+.section .data.var
+.global r0_reg
+.global r1_reg
+.global r2_reg
+.global r3_reg
+.global r4_reg
+.global r5_reg
+.global r6_reg
+.global r7_reg
+.global r8_reg
+.global r9_reg
+.global r10_reg
+.global r11_reg
+.global r12_reg
+.global r13_reg
+.global r14_reg
+.global r15_reg
+.global cpsr_reg
+
+r0_reg: .word 0
+r1_reg: .word 0
+r2_reg: .word 0
+r3_reg: .word 0
+r4_reg: .word 0
+r5_reg: .word 0
+r6_reg: .word 0
+r7_reg: .word 0
+r8_reg: .word 0
+r9_reg: .word 0
+r10_reg: .word 0
+r11_reg: .word 0
+r12_reg: .word 0
+r13_reg: .word 0
+r14_reg: .word 0
+r15_reg: .word 0
+cpsr_reg: .word 0
+
+
+.section .text
 dump_register_asm:
 	push {r0}
 	push {r1}

@@ -1,20 +1,20 @@
-#include "include/uart.h"
+#include "uart.h"
 
 unsigned char uart_getc()
 {
-	while(GET32(UART0_FR) & (1 << 4));
-	return GET32(UART0_DR);
+	while(get32(UART0_FR) & (1 << 4));
+	return get32(UART0_DR);
 }
 
 uint32_t uart_available()
 {
-	return (GET32(UART0_FR) | ~(1 << 4));
+	return (get32(UART0_FR) | ~(1 << 4));
 }
 
 void uart_putc(unsigned char c)
 {
-	while(GET32(UART0_FR) & (1 << 5));
-	PUT32(UART0_DR, (uint32_t)c);
+	while(get32(UART0_FR) & (1 << 5));
+	set32(UART0_DR, (uint32_t)c);
 }
 
 void uart_write_buffer(const unsigned char* buffer, size_t size)
@@ -129,31 +129,36 @@ void uart_puts(const char* str)
 	uart_write_buffer((const unsigned char*)str, strlen(str));
 }
 
+void uart_puts_nl(const char* str)
+{
+	uart_write_buffer((const unsigned char*)str, strlen(str));
+	uart_newline();
+}
+
 void uart_init()
 {
-	PUT32(GPPUD, 0x00);													/* Set no pull-up/down */
+	set32(GPPUD, 0x00);													/* Set no pull-up/down */
 	delay(150);
 
-	PUT32(GPPUDCLK0, (1 << 14) | (1 << 15));							/* For pins 14 and 15 */
+	set32(GPPUDCLK0, (1 << 14) | (1 << 15));							/* For pins 14 and 15 */
 	delay(150);
 
-	PUT32(GPPUDCLK0, 0x00);												/* Make it takes effect */
+	set32(GPPUDCLK0, 0x00);												/* Make it takes effect */
 
-	PUT32(GPFSEL1, (4 << 12) | (4 << 15));								/* Use alternate function 0 */
+	set32(GPFSEL1, (4 << 12) | (4 << 15));								/* Use alternate function 0 */
 
-	PUT32(UART0_CR, 0x00);												/* Disable UART */
+	set32(UART0_CR, 0x00);												/* Disable UART */
 
-	PUT32(UART0_ICR, 0x7FF);
+	set32(UART0_ICR, 0x7FF);
 
-	PUT32(UART0_IBRD, 1);												/* Set baud rate d = UART_CLOCK / (16 * BAUD_RATE) */
-	PUT32(UART0_FBRD, 40);
+	set32(UART0_IBRD, 1);												/* Set baud rate d = UART_CLOCK / (16 * BAUD_RATE) */
+	set32(UART0_FBRD, 40);
 
-	PUT32(UART0_LCRH, (1 << 4)|(1 << 5)|(1 << 6));
+	set32(UART0_LCRH, (1 << 4)|(1 << 5)|(1 << 6));
 
-	PUT32(UART0_IMSC, (1 << 1) | (1 << 4) | (1 << 5) | (1 << 6) |
-	                       (1 << 7) | (1 << 8) | (1 << 9) | (1 << 10));	/* Disable all interrupts */
+	set32(UART0_IMSC, 0x00);											/* Disable all interrupts */
 
-	PUT32(UART0_CR, (1 << 0)|(1 << 8)|(1 << 9));						/* Enable TX/RX*/
+	set32(UART0_CR, (1 << 0)|(1 << 8)|(1 << 9));						/* Enable TX/RX*/
 }
 
 void print_memory(uint32_t begin_address, uint32_t length)

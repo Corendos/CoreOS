@@ -11,6 +11,9 @@ By default the GPU has 64Mb of memory and the remaining part is given to the CPU
 
 BL instruction set the return address in LR.
 
+Each process has his own heap, stack, etc.
+THe paging works with 2 tables, one for the system, and one shared between processes.
+
 +------------ II. Theory ------------+
 
 +------------ 1. About Process Switching ------------+

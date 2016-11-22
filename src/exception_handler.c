@@ -1,4 +1,4 @@
-#include "include/exception_handler.h"
+#include "exception_handler.h"
 
 void undefined_instruction_handler(void)
 {
@@ -22,11 +22,6 @@ void prefetch_abort_handler(void)
 void data_abort_handler(void)
 {
 	uart_puts("Data Abort Handler\r\n");
-}
-
-void irq_handler(void)
-{
-	uart_puts("IRQ Handler\r\n");
 }
 
 void fiq_handler(void)

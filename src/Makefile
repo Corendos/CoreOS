@@ -1,39 +1,60 @@
-CC=arm-none-eabi-gcc
-OBJCOPY=arm-none-eabi-objcopy
-OBJDUMP=arm-none-eabi-objdump
+ifeq ($(OS),Windows_NT)
+    OS_detected := Windows
 
-CFLAGS02=-mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -O2 -Wall -Wextra
+    CC="C:\\Program Files (x86)\\GNU Tools ARM Embedded\\5.4 2016q3\\bin\\arm-none-eabi-gcc"
+	OBJCOPY="C:\\Program Files (x86)\\GNU Tools ARM Embedded\\5.4 2016q3\\bin\\arm-none-eabi-objcopy"
+	OBJDUMP="C:\\Program Files (x86)\\GNU Tools ARM Embedded\\5.4 2016q3\\bin\\arm-none-eabi-objdump"
+
+	LDFLAGS=-T linker\\linker.ld -ffreestanding -O2 -nostdlib
+
+	EXEC=clean list binary
+
+	OSNAME=..\\build\\kernel
+
+	BUILDDIR=..\\build
+
+	SRCASM=$(wildcard asm/*.s)
+	OBJASM=$(patsubst asm/%.s, obj\\%.o,$(SRCASM))
+	SRCC=$(wildcard *.c)
+	OBJC=$(patsubst %.c, obj\\%.o,$(SRCC))
+else
+    OS_detected := $(shell uname -s)
+
+    CC=arm-none-eabi-gcc
+	OBJCOPY=arm-none-eabi-objcopy
+	OBJDUMP=arm-none-eabi-objdump
+
+	LDFLAGS=-T linker/linker.ld -ffreestanding -O2 -nostdlib
+
+	EXEC=clean list binary download
+
+	OSNAME=../build/kernel
+
+	BUILDDIR=../build
+
+	SRCASM=$(wildcard asm/*.s)
+	OBJASM=$(patsubst asm/%.s, obj/%.o,$(SRCASM))
+	SRCC=$(wildcard *.c)
+	OBJC=$(patsubst %.c, obj/%.o,$(SRCC))
+endif
+
+CFLAGSO2=-mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -O2 -Wall -Wextra
 CFLAGS=-mcpu=arm1176jzf-s -fpic -ffreestanding -std=gnu99 -Wall -Wextra
 ASMFLAGS=-mcpu=arm1176jzf-s -fpic -ffreestanding -Wall -Wextra
 
-LDFLAGS=-T linker.ld -ffreestanding -O2 -nostdlib
-
-EXEC=clean list binary download
-
-SRCC=$(wildcard *.c)
-OBJC=$(patsubst %.c, obj/%.o,$(SRCC))
-
-SRCASM=$(wildcard *.s)
-OBJASM=$(patsubst %.s, obj/%.o,$(SRCASM))
-
+ASMDIR=asm
 OBJDIR=obj
-
-ASMOUT=$(SRCC:.c=.s)
-
-OSNAME=kernel
-
-print:
-	echo $(OBJC)
 
 all: $(EXEC)
 
-compile:  $(OBJC) $(OBJASM)
-	$(CC) -o ../build/$(OSNAME).elf $(LDFLAGS) $(OBJASM) $(OBJC)
+info:
+	echo $(OBJASM)
 
-asm: $(ASMOUT)
+compile:  $(OBJC) $(OBJASM)
+	$(CC) -o $(OSNAME).elf $(LDFLAGS) $(OBJASM) $(OBJC)
 
 binary: compile
-	$(OBJCOPY) ../build/$(OSNAME).elf -O binary ../build/$(OSNAME).img
+	$(OBJCOPY) $(OSNAME).elf -O binary $(OSNAME).img
 
 download: binary
 	sudo mount /dev/mmcblk0p1 /media/corendos/boot/
@@ -41,17 +62,28 @@ download: binary
 	sudo umount /dev/mmcblk0p1
 
 list: compile
-	$(OBJDUMP) -D ../build/$(OSNAME).elf > ../build/$(OSNAME).list
+	$(OBJDUMP) -D $(OSNAME).elf > $(OSNAME).list
 
-%.s: %.c
-	$(CC) $(CFLAGS02) -S -o asm/$@ -c $^
+ifeq ($(OS_detected), Windows)
+$(OBJDIR)\\%.o: %.c
+	$(CC) $(CFLAGSO2) -c -o $@ $<
 
-$(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS02) -c -o $@ $<
-
-$(OBJDIR)/%.o: %.s
+$(OBJDIR)\\%.o: $(ASMDIR)\\%.s
 	$(CC) $(ASMFLAGS) -c -o $@ $<
+else
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGSO2) -c -o $@ $<
 
+$(OBJDIR)/%.o: $(ASMDIR)/%.s
+	$(CC) $(ASMFLAGS) -c -o $@ $<
+endif
+
+ifeq ($(OS_detected), Windows)
 clean:
-	rm -rf *.o
-	rm -rf ../build/*.*
+	del /Q $(OBJDIR)\\*.o
+	del /Q $(BUILDDIR)\\*.*
+else
+clean:
+	rm -rf $(OBJDIR)/*.o
+	rm -rf $(OBJDIR)/*.*
+endif
